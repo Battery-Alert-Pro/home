@@ -40,25 +40,18 @@ jobs:
       - name: Install build dependencies
         run: pip install -r requirements.txt
       - name: Build site
-        run: |
-          set -x
-          python3 tools/build.py
-          echo "### _site inventory" >> "$GITHUB_STEP_SUMMARY"
-          find _site -type f | sort >> "$GITHUB_STEP_SUMMARY"
-          {
-            echo "=== pwd ==="; pwd
-            echo "=== repo root ==="; ls -la
-            echo "=== content ==="; find content -type f 2>&1 | sort
-            echo "=== _site exists? ==="; ls -la _site 2>&1 | head -40
-            echo "=== _site tree ==="; find _site -type f 2>&1 | sort
-            echo "=== python ==="; python3 -c "import markdown,sys; print('markdown', markdown.__version__, sys.version)"
-          } > diag-root.txt 2>&1
-          cp diag-root.txt _site/diag-site.txt 2>/dev/null || echo "could not copy diag into _site"
+        run: python3 tools/build.py
+      - name: Remove build-only files
+        # Keep the published tree identical to the one the branch-based
+        # Jekyll build produces (see _config.yml), so whichever build
+        # finishes last publishes the same content.
+        run: rm -rf tools templates content requirements.txt _config.yml
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # The built site: hand-written pages plus the generated blog
-          path: '_site'
+          # The site is the repository root: the hand-written pages plus the
+          # blog that tools/build.py generates alongside them.
+          path: '.'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5

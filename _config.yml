@@ -1,0 +1,20 @@
+# Jekyll configuration for GitHub's branch-based Pages build.
+#
+# The site is published by .github/workflows/static.yml, which uploads the
+# repository root as the Pages artifact. GitHub can also run a branch-based
+# Jekyll build of the same branch; this file makes that build publish the
+# same site instead of a different one, so whichever build finishes last
+# results in identical content.
+#
+# Nothing in here is used by tools/build.py.
+
+# Build inputs that are not part of the published site.
+exclude:
+  - .github
+  - .gitattributes
+  - .gitignore
+  - content
+  - requirements.txt
+  - templates
+  - tools
+  - README.md

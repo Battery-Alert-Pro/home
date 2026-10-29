@@ -2,16 +2,18 @@
 """Static site builder for the Battery Alert Pro site.
 
 The hand-written pages (index.html, buy_now.html, 404.html) and all binary
-assets are copied straight from the repository root, exactly as they are
-today. On top of that, this script renders the Markdown posts in
-content/posts/ into a small blog with:
+assets already live at the repository root and are published as they are.
+This script generates the blog alongside them:
 
-    _site/posts/<slug>/index.html   one page per post
-    _site/blog/index.html           post listing
-    _site/blog/tag/<tag>/index.html per-tag listing
-    _site/sitemap.xml                search engine sitemap
-    _site/feed.xml                   RSS 2.0 feed
-    _site/robots.txt                 crawler directives
+    posts/<slug>/index.html    one page per post
+    blog/index.html            post listing
+    blog/tag/<tag>/index.html  per-tag listing
+    sitemap.xml                 search engine sitemap
+    feed.xml                    RSS 2.0 feed
+    robots.txt                  crawler directives
+
+Everything it writes is listed in .gitignore, so the generated output stays
+out of version control while still being published.
 
 Paths inside the generated pages are relative, so the site keeps working
 from a repository root, a docs/ folder, or a custom domain.
@@ -24,7 +26,6 @@ import datetime
 import html
 import json
 import re
-import shutil
 from pathlib import Path
 
 import markdown
@@ -32,26 +33,10 @@ import markdown
 ROOT = Path(__file__).resolve().parent.parent
 CONTENT = ROOT / "content" / "posts"
 TEMPLATES = ROOT / "templates"
-OUT = ROOT / "_site"
 
 SITE_URL = "https://battery-alert-pro.github.io/home"
 SITE_NAME = "Battery Alert Pro"
 PUBLISHER = "Woteq Software"
-
-# Repository-root entries that are not part of the published site.
-EXCLUDE_NAMES = {
-    ".git",
-    ".github",
-    ".gitattributes",
-    ".gitignore",
-    "content",
-    "templates",
-    "tools",
-    "requirements.txt",
-    "_site",
-    "__pycache__",
-    "node_modules",
-}
 
 SLUG_RE = re.compile(r"[^a-z0-9]+")
 DATE_FMT = "%Y-%m-%d"
@@ -146,21 +131,14 @@ def meta_tag(name, content, attr="name"):
     return f'<meta {attr}="{name}" content="{html.escape(content, quote=True)}">'
 
 
+def write(path, text):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
 # --------------------------------------------------------------------------
 # build steps
 # --------------------------------------------------------------------------
-def copy_static_files():
-    """Copy the hand-written pages and binary assets into the output folder."""
-    for entry in sorted(ROOT.iterdir()):
-        if entry.name in EXCLUDE_NAMES:
-            continue
-        target = OUT / entry.name
-        if entry.is_dir():
-            shutil.copytree(entry, target, dirs_exist_ok=True)
-        else:
-            shutil.copy2(entry, target)
-
-
 def load_posts():
     posts = []
     for path in sorted(CONTENT.glob("*.md")):
@@ -179,7 +157,6 @@ def load_posts():
         )
 
         words = len(body.split())
-        reading_time = max(1, round(words / WORDS_PER_MINUTE))
 
         posts.append(
             {
@@ -192,7 +169,7 @@ def load_posts():
                 "keywords": meta.get("keywords", ""),
                 "body": html_body,
                 "words": words,
-                "reading_time": reading_time,
+                "reading_time": max(1, round(words / WORDS_PER_MINUTE)),
                 "source": path.name,
             }
         )
@@ -217,9 +194,6 @@ def base_slots(post, prefix, url, og_type, published_time=""):
 
 def build_post_pages(posts):
     for post in posts:
-        page = OUT / "posts" / post["slug"]
-        page.mkdir(parents=True, exist_ok=True)
-
         prefix = "../../"
         url = f"{SITE_URL}/posts/{post['slug']}/"
 
@@ -279,15 +253,13 @@ def build_post_pages(posts):
             }
         )
 
-        (page / "index.html").write_text(
-            render_page("post_body.html", slots), encoding="utf-8"
+        write(
+            ROOT / "posts" / post["slug"] / "index.html",
+            render_page("post_body.html", slots),
         )
 
 
 def build_blog_index(posts):
-    page = OUT / "blog"
-    page.mkdir(parents=True, exist_ok=True)
-
     items = "".join(
         f'<article class="post-card">'
         f'<h2><a href="/posts/{post["slug"]}/">{html.escape(post["title"])}</a></h2>'
@@ -316,9 +288,7 @@ def build_blog_index(posts):
         }
     )
 
-    (page / "index.html").write_text(
-        render_page("blog_index_body.html", slots), encoding="utf-8"
-    )
+    write(ROOT / "blog" / "index.html", render_page("blog_index_body.html", slots))
 
 
 def build_tag_pages(posts):
@@ -328,10 +298,6 @@ def build_tag_pages(posts):
             tags.setdefault(tag, []).append(post)
 
     for tag, tagged in tags.items():
-        slug = slugify(tag)
-        page = OUT / "blog" / "tag" / slug
-        page.mkdir(parents=True, exist_ok=True)
-
         items = "".join(
             f'<li><a href="/posts/{post["slug"]}/">{html.escape(post["title"])}</a>'
             f'<span class="muted"> &mdash; {post["pretty_date"]}</span></li>'
@@ -341,13 +307,19 @@ def build_tag_pages(posts):
         slots = base_slots(
             {"title": tag, "description": "", "keywords": ""},
             "../../../",
-            f"{SITE_URL}/blog/tag/{slug}/",
+            f"{SITE_URL}/blog/tag/{slugify(tag)}/",
             "website",
         )
-        slots.update({"h1": esc(f"Tagged: {tag}"), "items": rewrite_root_links(items, "../../../")})
+        slots.update(
+            {
+                "h1": esc(f"Tagged: {tag}"),
+                "items": rewrite_root_links(items, "../../../"),
+            }
+        )
 
-        (page / "index.html").write_text(
-            render_page("tag_index_body.html", slots), encoding="utf-8"
+        write(
+            ROOT / "blog" / "tag" / slugify(tag) / "index.html",
+            render_page("tag_index_body.html", slots),
         )
 
 
@@ -380,7 +352,7 @@ def build_sitemap(posts):
         + "\n".join(parts)
         + "\n</urlset>\n"
     )
-    (OUT / "sitemap.xml").write_text(xml, encoding="utf-8")
+    write(ROOT / "sitemap.xml", xml)
 
 
 def build_feed(posts):
@@ -415,43 +387,17 @@ def build_feed(posts):
         + "".join(items)
         + "</channel></rss>\n"
     )
-    (OUT / "feed.xml").write_text(xml, encoding="utf-8")
+    write(ROOT / "feed.xml", xml)
 
 
 def build_robots():
-    (OUT / "robots.txt").write_text(
+    write(
+        ROOT / "robots.txt",
         "User-agent: *\nAllow: /\n\n" f"Sitemap: {SITE_URL}/sitemap.xml\n",
-        encoding="utf-8",
-    )
-
-
-def inject_blog_posts(posts, limit=4):
-    """Replace the BLOG_POSTS marker in the landing page with recent posts."""
-    index = OUT / "index.html"
-    if not index.exists():
-        return
-
-    items = "".join(
-        f'<li><a href="posts/{post["slug"]}/">{html.escape(post["title"])}</a>'
-        f'<span class="meta">{html.escape(post["pretty_date"])} &middot; '
-        f'{html.escape(post["description"])}</span></li>'
-        for post in posts[:limit]
-    )
-
-    source = index.read_text(encoding="utf-8")
-    if "<!-- BLOG_POSTS -->" not in source:
-        return
-    index.write_text(
-        source.replace("<!-- BLOG_POSTS -->", items), encoding="utf-8"
     )
 
 
 def main():
-    if OUT.exists():
-        shutil.rmtree(OUT)
-    OUT.mkdir(parents=True)
-
-    copy_static_files()
     posts = load_posts()
     build_post_pages(posts)
     build_blog_index(posts)
@@ -459,9 +405,8 @@ def main():
     build_sitemap(posts)
     build_feed(posts)
     build_robots()
-    inject_blog_posts(posts)
 
-    print(f"built {OUT.relative_to(ROOT)}/ - {len(posts)} posts")
+    print(f"built {len(posts)} posts")
     for post in posts:
         print(f"  /posts/{post['slug']}/  ({post['words']} words, {post['reading_time']} min)")
 
