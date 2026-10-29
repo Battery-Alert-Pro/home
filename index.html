@@ -325,6 +325,46 @@
             margin-top: 18px;
         }
 
+        /* --- Blog links on the landing page --- */
+        .blog-list {
+            list-style: none;
+            padding-left: 0;
+            margin: 0 0 25px;
+        }
+
+        .blog-list li {
+            padding-left: 25px;
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .blog-list li::before {
+            content: '\2022';
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+            font-size: 12px;
+            top: 5px;
+        }
+
+        .blog-list a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .blog-list a:hover {
+            text-decoration: underline;
+        }
+
+        .blog-list .meta {
+            display: block;
+            font-size: 13px;
+            color: var(--light-text-color);
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
         @media (max-width: 640px) {
             /* The sticky nav has six links; let them wrap onto two rows
                instead of overflowing horizontally on narrow screens. */
@@ -397,6 +437,7 @@
             <li><a href="#requirements">Requirements</a></li>
             <li><a href="#screenshots">Screenshots</a></li>
             <li><a href="#how-to-use">How to use</a></li>
+            <li><a href="#blog">Blog</a></li>
             <li><a href="#download">Download</a></li>
         </ul>
     </nav>
@@ -512,6 +553,18 @@
                 </div>
             </section>
 
+            <!-- BLOG SECTION -->
+            <section id="blog" class="section">
+                <div class="section-bg-text">Blog</div>
+                <div class="section-content">
+                    <h2>From the blog</h2>
+                    <ul class="blog-list">
+<!-- BLOG_POSTS -->
+                    </ul>
+                    <a href="blog/" class="btn btn-secondary">Read all articles</a>
+                </div>
+            </section>
+
             <!-- DOWNLOAD SECTION -->
             <section id="download" class="section">
                 <div class="section-bg-text">DWNLD</div>
@@ -537,6 +590,7 @@
             <a href="buy_now.html" class="btn btn-secondary">BUY NOW</a>
             <a href="mailto:nova26sy@gmail.com" class="btn btn-secondary">Contact Us</a>
             <a href="user_manual.pdf" class="btn btn-secondary" download>User Manual</a>
+            <a href="blog/" class="btn btn-secondary">Blog</a>
         </footer>
     </div>
 

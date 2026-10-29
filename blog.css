@@ -1,0 +1,331 @@
+/* ==========================================================================
+   Blog styles — matches the Battery Alert Pro landing page design language
+   ========================================================================== */
+
+:root {
+    --accent-color: #0095D5;
+    --accent-dark: #007bb5;
+    --text-color: #333;
+    --light-text-color: #666;
+    --border-color: #e0e0e0;
+    --bg-color: #ffffff;
+    --soft-bg: #f7f9fa;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    margin: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* --- Top navigation ---------------------------------------------------- */
+.topnav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.topnav-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: 500;
+    color: var(--text-color);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.brand img { border-radius: 6px; display: block; }
+
+.topnav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.topnav-links a {
+    display: inline-block;
+    padding: 8px 10px;
+    color: var(--light-text-color);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.topnav-links a:hover { color: var(--accent-color); background-color: #f0faff; }
+
+/* --- Layout ------------------------------------------------------------ */
+.wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+}
+
+/* --- Blog index -------------------------------------------------------- */
+.blog-head { padding: 48px 0 8px; }
+.blog-head h1 { font-size: 38px; font-weight: 300; margin: 0 0 10px; }
+.blog-head .lead { font-size: 17px; color: var(--light-text-color); margin: 0 0 10px; }
+.blog-head .feed-link { font-size: 14px; margin: 0; }
+.blog-head .feed-link a { color: var(--accent-color); }
+
+.post-list { padding-top: 20px; }
+
+.post-card {
+    padding: 26px 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.post-card h2 {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.35;
+    margin: 0 0 6px;
+}
+
+.post-card h2 a { color: var(--text-color); text-decoration: none; }
+.post-card h2 a:hover { color: var(--accent-color); }
+
+.post-card .meta { font-size: 13px; color: var(--light-text-color); margin: 0 0 10px; }
+.post-card .excerpt { margin: 0 0 12px; color: var(--light-text-color); }
+
+.read-more {
+    color: var(--accent-color);
+    font-weight: 500;
+    font-size: 15px;
+    text-decoration: none;
+}
+
+.read-more:hover { text-decoration: underline; }
+
+/* --- Single post ------------------------------------------------------- */
+.crumbs {
+    font-size: 13px;
+    color: var(--light-text-color);
+    margin: 34px 0 0;
+}
+
+.crumbs a { color: var(--accent-color); text-decoration: none; }
+.crumbs a:hover { text-decoration: underline; }
+.crumbs span { margin: 0 6px; color: #bbb; }
+
+.post h1 {
+    font-size: 38px;
+    font-weight: 300;
+    line-height: 1.25;
+    margin: 10px 0 14px;
+}
+
+.post-meta {
+    font-size: 14px;
+    color: var(--light-text-color);
+    margin: 0 0 30px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.post-meta .sep { margin: 0 8px; color: #ccc; }
+
+.tag {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 10px;
+    background-color: #e7f5fc;
+    color: var(--accent-color);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.tag:hover { background-color: #d6eefa; }
+
+/* --- Article prose ----------------------------------------------------- */
+.prose { font-size: 17px; }
+.prose p { margin: 0 0 20px; }
+.prose h2 {
+    font-size: 27px;
+    font-weight: 400;
+    color: var(--accent-color);
+    margin: 42px 0 14px;
+    line-height: 1.3;
+}
+
+.prose h3 {
+    font-size: 21px;
+    font-weight: 500;
+    margin: 32px 0 10px;
+    line-height: 1.35;
+}
+
+.prose ul, .prose ol { margin: 0 0 22px; padding-left: 24px; }
+.prose li { margin-bottom: 9px; }
+.prose li > ul, .prose li > ol { margin-top: 9px; }
+
+.prose a { color: var(--accent-color); }
+
+.prose strong { font-weight: 700; color: #222; }
+
+.prose blockquote {
+    margin: 24px 0;
+    padding: 16px 22px;
+    background-color: var(--soft-bg);
+    border-left: 4px solid var(--accent-color);
+    border-radius: 0 8px 8px 0;
+    color: #555;
+}
+
+.prose blockquote p:last-child { margin-bottom: 0; }
+
+.prose code {
+    background-color: #f2f4f5;
+    color: #b3341f;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Cascadia Mono', Consolas, 'Courier New', monospace;
+    font-size: 0.9em;
+    white-space: nowrap;
+}
+
+.prose pre {
+    background-color: #1e2429;
+    color: #e6edf3;
+    padding: 16px 18px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 0 0 24px;
+    line-height: 1.6;
+}
+
+.prose pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: 14px;
+}
+
+.prose table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 26px;
+    font-size: 15px;
+}
+
+.prose th, .prose td {
+    padding: 11px 13px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: top;
+}
+
+.prose th {
+    font-weight: 500;
+    color: var(--text-color);
+    background-color: var(--soft-bg);
+}
+
+.prose hr {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 36px 0;
+}
+
+/* --- Call to action ---------------------------------------------------- */
+.cta {
+    margin: 44px 0 0;
+    padding: 28px 30px;
+    background-color: var(--soft-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+}
+
+.cta h2 { font-size: 23px; font-weight: 400; color: var(--accent-color); margin: 0 0 10px; }
+.cta p { margin: 0 0 16px; color: var(--light-text-color); }
+.cta p:last-child { margin-bottom: 0; }
+
+.btn {
+    display: inline-block;
+    padding: 11px 26px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 15px;
+    transition: background-color 0.25s ease, transform 0.1s ease;
+}
+
+.btn-primary { background-color: var(--accent-color); color: #fff; }
+.btn-primary:hover { background-color: var(--accent-dark); }
+.btn-secondary { background-color: transparent; color: var(--accent-color); border: 2px solid var(--accent-color); }
+.btn-secondary:hover { background-color: #eaf7fd; }
+.btn:active { transform: translateY(1px); }
+.btn + .btn { margin-left: 8px; }
+
+/* --- Related ----------------------------------------------------------- */
+.related { margin: 44px 0 0; padding-top: 28px; border-top: 1px solid var(--border-color); }
+.related h2 { font-size: 19px; font-weight: 500; margin: 0 0 14px; }
+.related ul { margin: 0; padding-left: 20px; }
+.related li { margin-bottom: 8px; }
+.related a { color: var(--accent-color); text-decoration: none; }
+.related a:hover { text-decoration: underline; }
+.muted { color: var(--light-text-color); font-size: 14px; }
+
+/* --- Tag list ---------------------------------------------------------- */
+.tagged-list { margin: 26px 0 30px; padding-left: 20px; }
+.tagged-list li { margin-bottom: 10px; }
+.tagged-list a { color: var(--accent-color); text-decoration: none; }
+.tagged-list a:hover { text-decoration: underline; }
+.back a { color: var(--accent-color); text-decoration: none; font-size: 14px; }
+
+/* --- Footer ------------------------------------------------------------ */
+.sitefoot {
+    border-top: 1px solid var(--border-color);
+    padding: 32px 20px;
+    text-align: center;
+}
+
+.foot-links { font-size: 14px; margin: 0 0 8px; }
+.foot-links a { color: var(--light-text-color); text-decoration: none; margin: 0 3px; }
+.foot-links a:hover { color: var(--accent-color); }
+.foot-note { font-size: 13px; color: #999; margin: 0; }
+
+/* --- Mobile ------------------------------------------------------------ */
+@media (max-width: 640px) {
+    .topnav-inner { height: auto; padding: 10px 16px; flex-wrap: wrap; justify-content: center; }
+    .topnav-links { flex-wrap: wrap; justify-content: center; }
+    .topnav-links a { padding: 6px 8px; font-size: 13px; }
+
+    .blog-head { padding: 32px 0 4px; }
+    .blog-head h1, .post h1 { font-size: 29px; }
+
+    .prose { font-size: 16px; }
+    .prose h2 { font-size: 23px; }
+    .prose h3 { font-size: 19px; }
+
+    .cta { padding: 22px 20px; }
+    .btn { display: block; text-align: center; margin: 0 0 10px; }
+    .btn + .btn { margin-left: 0; }
+}

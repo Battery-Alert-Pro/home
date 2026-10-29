@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <meta name="description" content="{{ description }}">
+    <meta name="author" content="Woteq Software">
+    {{ keywords_meta }}
+    <link rel="icon" type="image/png" href="{{ prefix }}image.png">
+    <link rel="apple-touch-icon" href="{{ prefix }}image.png">
+    <link rel="canonical" href="{{ canonical }}">
+    <link rel="alternate" type="application/rss+xml" title="Battery Alert Pro Blog" href="{{ prefix }}feed.xml">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="{{ prefix }}blog.css">
+
+    <meta property="og:type" content="{{ og_type }}">
+    <meta property="og:site_name" content="Battery Alert Pro">
+    <meta property="og:url" content="{{ canonical }}">
+    <meta property="og:title" content="{{ title }}">
+    <meta property="og:description" content="{{ description }}">
+    <meta property="og:image" content="{{ og_image }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Battery Alert Pro - smart battery management for Windows">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ title }}">
+    <meta name="twitter:description" content="{{ description }}">
+    <meta name="twitter:image" content="{{ og_image }}">
+    {{ published_meta }}
+    <script type="application/ld+json">{{ jsonld }}</script>
+</head>
+<body>
+
+<nav class="topnav">
+    <div class="topnav-inner">
+        <a class="brand" href="{{ prefix }}">
+            <img src="{{ prefix }}image.png" alt="" width="28" height="28">
+            <span>Battery Alert Pro</span>
+        </a>
+        <ul class="topnav-links">
+            <li><a href="{{ prefix }}#features">Features</a></li>
+            <li><a href="{{ prefix }}#screenshots">Screenshots</a></li>
+            <li><a href="{{ prefix }}#download">Download</a></li>
+            <li><a href="{{ prefix }}blog/">Blog</a></li>
+        </ul>
+    </div>
+</nav>
+
+<main class="wrap">
+{{ content }}
+</main>
+
+<footer class="sitefoot">
+    <p class="foot-links">
+        <a href="{{ prefix }}">Home</a> &middot;
+        <a href="{{ prefix }}blog/">Blog</a> &middot;
+        <a href="{{ prefix }}buy_now.html">Buy now</a> &middot;
+        <a href="{{ prefix }}user_manual.pdf">User manual</a> &middot;
+        <a href="{{ prefix }}feed.xml">RSS</a>
+    </p>
+    <p class="foot-note">&copy; 2026 Woteq Software. Battery Alert Pro is a Windows utility.</p>
+</footer>
+
+</body>
+</html>

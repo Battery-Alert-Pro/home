@@ -1,0 +1,34 @@
+<article class="post">
+
+    <p class="crumbs"><a href="{{ prefix }}blog/">Blog</a> <span>/</span> {{ h1 }}</p>
+
+    <h1>{{ h1 }}</h1>
+
+    <p class="post-meta">
+        <time datetime="{{ date_iso }}">{{ date }}</time>
+        <span class="sep">&middot;</span>
+        <span>{{ reading_time }} min read</span>
+        {{ tags_html }}
+    </p>
+
+    <div class="prose">
+{{ body }}
+    </div>
+
+    <div class="cta">
+        <h2>Never lose work to a surprise shutdown</h2>
+        <p>
+            Battery Alert Pro warns you when your battery drops below the level you choose,
+            with a custom sound or on-screen alert, and an optional action that runs when
+            the timer expires. It lives quietly in the system tray and costs $10 for a
+            lifetime license.
+        </p>
+        <p>
+            <a class="btn btn-primary" href="{{ prefix }}#download">Download for Windows</a>
+            <a class="btn btn-secondary" href="{{ prefix }}buy_now.html">Buy a license</a>
+        </p>
+    </div>
+
+    {{ related_html }}
+
+</article>
