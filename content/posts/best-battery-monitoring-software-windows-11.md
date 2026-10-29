@@ -99,7 +99,7 @@ This is a legitimate choice for people who like that kind of thing, and it is fr
 - It does not diagnose a failing battery. For that, use the telemetry tools above or `powercfg /batteryreport`.
 - It is Windows only, and it needs the .NET Desktop Runtime — which Windows usually offers to install for you on first run.
 
-It is a $10 lifetime licence for a utility that does one job: make sure you hear about a low battery before the machine decides to go to sleep without asking.
+It is a $5 lifetime licence for a utility that does one job: make sure you hear about a low battery before the machine decides to go to sleep without asking.
 
 ## Side by side
 
@@ -109,7 +109,7 @@ It is a $10 lifetime licence for a utility that does one job: make sure you hear
 | OEM tools (Vantage et al.) | Free | No | No | Good | No |
 | HWMonitor / BatteryView | Free / paid | No | No | Yes | No |
 | AutoHotkey / Power Automate | Free | Yes | Yes | No | Yes |
-| **Battery Alert Pro** | **$10** | **Yes** | **Yes** | **No** | **No** |
+| **Battery Alert Pro** | **$5** | **Yes** | **Yes** | **No** | **No** |
 
 ## Which one should you pick
 
