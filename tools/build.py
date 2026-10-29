@@ -372,7 +372,13 @@ def build_feed(posts):
             "</item>"
         )
 
-    now = datetime.datetime.now(datetime.timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
+    # Deliberately derived from the newest post rather than the current time:
+    # the generated output is committed, so a wall-clock timestamp would make
+    # every build differ and trigger a commit on every push.
+    newest = max((post["date"] for post in posts), default=DATE_FMT)
+    last_build = datetime.datetime.strptime(newest, DATE_FMT).strftime(
+        "%a, %d %b %Y %H:%M:%S +0000"
+    )
     xml = (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">'
@@ -382,7 +388,7 @@ def build_feed(posts):
         "<description>Practical articles on battery alerts, laptop longevity, and "
         "protecting unsaved work.</description>"
         "<language>en-us</language>"
-        f"<lastBuildDate>{now}</lastBuildDate>"
+        f"<lastBuildDate>{last_build}</lastBuildDate>"
         f'<atom:link href="{SITE_URL}/feed.xml" rel="self" type="application/rss+xml"/>'
         + "".join(items)
         + "</channel></rss>\n"
