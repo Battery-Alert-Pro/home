@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://battery-alert-pro.github.io/home/sitemap.xml

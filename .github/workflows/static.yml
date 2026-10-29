@@ -11,7 +11,7 @@ on:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -41,11 +41,22 @@ jobs:
         run: pip install -r requirements.txt
       - name: Build site
         run: python3 tools/build.py
-      - name: Remove build-only files
-        # Keep the published tree identical to the one the branch-based
-        # Jekyll build produces (see _config.yml), so whichever build
-        # finishes last publishes the same content.
-        run: rm -rf tools templates content requirements.txt _config.yml
+      - name: Commit regenerated blog
+        # The generated blog is committed so that GitHub's branch-based Pages
+        # build can publish it too. If a post was edited without running the
+        # builder locally, commit the regenerated output back here so both
+        # builds stay in step.
+        continue-on-error: true
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add blog posts feed.xml sitemap.xml robots.txt
+          if git diff --cached --quiet; then
+            echo "Blog output is already up to date."
+          else
+            git commit -m "chore: regenerate blog output"
+            git push origin HEAD:main
+          fi
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

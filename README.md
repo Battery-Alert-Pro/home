@@ -20,7 +20,8 @@ deploy time.
 ├── 404.html                       # Custom "page not found" page
 ├── social_card.png                # 1200x630 social preview card (og:image)
 ├── blog.css                       # Styles for the blog pages
-├── _config.yml                    # Keeps the branch-based Pages build in sync
+├── .nojekyll                      # Serve the branch as static files
+├── _config.yml                    # Fallback config for the branch-based build
 ├── BatteryAlertPro_Setup.zip      # Installer (recommended download)
 ├── BatteryAlertProSetup.exe       # Installer (direct download)
 ├── user_manual.pdf                # 4-page user manual
@@ -34,6 +35,11 @@ deploy time.
 │   ├── adhd-laptop-shutdown-lost-work.md
 │   ├── best-battery-monitoring-software-windows-11.md
 │   └── charging-laptop-to-100-battery-health.md
+├── blog/                          # Generated — post and tag listings
+├── posts/                         # Generated — one page per post
+├── feed.xml                       # Generated — RSS feed
+├── sitemap.xml                    # Generated — search engine sitemap
+├── robots.txt                     # Generated — crawler directives
 ├── templates/                     # HTML templates for the blog
 │   ├── base.html                  # Shared page skeleton
 │   ├── post_body.html             # Single post
@@ -49,12 +55,21 @@ deploy time.
 └── README.md
 ```
 
-These paths are **generated** by `tools/build.py` and are listed in
-`.gitignore`, so they stay out of version control while still being published:
+These paths are **generated** by `tools/build.py` and are **committed**, so that
+GitHub's branch-based Pages build can publish them as well:
 
 ```
 blog/        posts/        feed.xml        sitemap.xml        robots.txt
 ```
+
+Regenerate them whenever you change a post:
+
+```bash
+python3 tools/build.py && git add -A && git commit -m "Update blog"
+```
+
+The workflow also regenerates and commits them automatically, so a forgotten
+local build will not leave the site stale.
 
 ## Deployment
 
@@ -69,10 +84,11 @@ The site is deployed by **GitHub Actions**, not by the legacy branch-based Pages
 > **One thing to check in the repository settings.**
 > Go to **Settings → Pages → Build and deployment → Source**. If it says
 > *Deploy from a branch*, switch it to **GitHub Actions**. With the branch
-> option selected, GitHub also runs its own Jekyll build of `main` alongside
-> this workflow, and the two compete for the live site. The repository is set
-> up so both publish identical content (`_config.yml` mirrors the exclusions),
-> but pointing Pages at **GitHub Actions** removes the ambiguity entirely.
+> option selected, GitHub also runs its own build of `main` alongside this
+> workflow, and the two compete for the live site. The repository is set up so
+> both publish identical content — `.nojekyll` stops the branch build
+> processing anything, and the generated blog is committed — but pointing
+> Pages at **GitHub Actions** removes the ambiguity entirely.
 
 To publish a change:
 
@@ -141,8 +157,8 @@ python3 -m http.server 8080
 ```
 
 `tools/build.py` writes `blog/`, `posts/`, `feed.xml`, `sitemap.xml` and
-`robots.txt` into the repository root. They are gitignored, so `git status`
-stays clean.
+`robots.txt` into the repository root. Run it and commit the result before
+pushing.
 
 ## Notes
 
