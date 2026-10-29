@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battery Alert Pro - Smart Battery Management for Windows</title>
+    <meta name="description" content="Battery Alert Pro is a lightweight Windows utility that protects your laptop battery with low and high battery alerts, customizable actions, and smart hysteresis. Runs silently in the system tray.">
+    <meta name="author" content="Woteq Software">
+    <link rel="icon" type="image/png" href="image.png">
+    <link rel="apple-touch-icon" href="image.png">
+
+    <!-- Social preview. For reliable crawling by Facebook/Twitter, make og:url
+         and og:image absolute, e.g. https://<user>.github.io/<repo>/main_screen.png -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Battery Alert Pro">
+    <meta property="og:title" content="Battery Alert Pro - Smart Battery Management for Windows">
+    <meta property="og:description" content="Low and high battery alerts, customizable actions, and smart hysteresis for Windows 10 and 11.">
+    <meta property="og:image" content="main_screen.png">
+    <meta property="og:image:alt" content="Battery Alert Pro main settings interface">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Battery Alert Pro - Smart Battery Management for Windows">
+    <meta name="twitter:description" content="Low and high battery alerts, customizable actions, and smart hysteresis for Windows 10 and 11.">
+    <meta name="twitter:image" content="main_screen.png">
+    <style>
+        /* --- Global Styles & Fonts --- */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+        :root {
+            --accent-color: #0095D5;
+            --text-color: #333;
+            --light-text-color: #666;
+            --border-color: #e0e0e0;
+            --bg-color: #ffffff;
+            --nav-height: 60px; /* Define nav height as a variable */
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: var(--nav-height); /* Offset for sticky nav */
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.7;
+        }
+
+        /* --- Main Layout Container --- */
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* --- Sticky Navigation Bar --- */
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            height: var(--nav-height);
+        }
+
+        .nav-list {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            list-style: none;
+            height: 100%;
+        }
+
+        .nav-list li {
+            margin: 0 15px;
+        }
+
+        .nav-list a {
+            text-decoration: none;
+            color: var(--light-text-color);
+            font-weight: 500;
+            padding: 10px 5px;
+            transition: color 0.3s ease, border-bottom 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-list a:hover {
+            color: var(--accent-color);
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        /* --- Header --- */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            margin-right: 20px;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+        }
+
+        .app-name {
+            font-size: 48px;
+            font-weight: 300;
+        }
+
+        /* --- Section Styling --- */
+        .section {
+            padding: 80px 20px;
+            position: relative;
+            overflow: hidden;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .section:first-of-type {
+            border-top: none;
+        }
+
+        .section-bg-text {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+            font-size: 150px;
+            font-weight: 700;
+            color: #000000;
+            opacity: 0.03;
+            user-select: none;
+            z-index: 0;
+            white-space: nowrap;
+        }
+
+        .section-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        h2 {
+            font-size: 32px;
+            font-weight: 400;
+            color: var(--accent-color);
+            margin-bottom: 30px;
+        }
+
+        p, li {
+            font-size: 16px;
+            color: var(--light-text-color);
+        }
+
+        /* --- Features List --- */
+        .features-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .features-list li {
+            padding-left: 25px;
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .features-list li::before {
+            content: '\2022';
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+            font-size: 12px;
+            top: 5px;
+        }
+
+        /* --- Screenshots --- */
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .screenshot-placeholder {
+            width: 100%;
+            height: 250px;
+            background-color: #e9e9e9;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            font-style: italic;
+        }
+
+        /* --- How to Use / Videos --- */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 200px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            font-style: italic;
+        }
+        
+        .video-placeholder a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+
+        /* --- Download & Footer Buttons --- */
+        .download-box {
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .download-box p {
+            margin-top: 0;
+            font-weight: 500;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #007bb5;
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #f0faff;
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        /* --- File list (replaces the server-side directory listing) --- */
+        .file-list {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+            font-size: 14px;
+        }
+
+        .file-list th,
+        .file-list td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .file-list th {
+            font-weight: 500;
+            color: var(--text-color);
+            background-color: #f7f9fa;
+        }
+
+        .file-list td:last-child,
+        .file-list th:last-child {
+            text-align: right;
+            color: var(--light-text-color);
+            white-space: nowrap;
+        }
+
+        .file-list a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .file-list a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-alt {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 9px 22px;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .btn-alt:hover {
+            background-color: #f0faff;
+        }
+
+        .note {
+            font-size: 13px;
+            color: var(--light-text-color);
+            margin-top: 18px;
+        }
+
+        @media (max-width: 640px) {
+            .file-list th:nth-child(3),
+            .file-list td:nth-child(3) {
+                display: none;
+            }
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        footer .btn {
+            margin: 0 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- STICKY NAVIGATION BAR -->
+    <nav class="nav-bar">
+        <ul class="nav-list">
+            <li><a href="#about">About</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#requirements">Requirements</a></li>
+            <li><a href="#screenshots">Screenshots</a></li>
+            <li><a href="#how-to-use">How to use</a></li>
+            <li><a href="#download">Download</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <img src="image.png" alt="Battery Alert Pro Logo">
+            </div>
+            <h1 class="app-name">Battery Alert Pro</h1>
+        </header>
+
+        <main>
+            <!-- ABOUT SECTION -->
+            <section id="about" class="section">
+                <div class="section-bg-text">Info</div>
+                <div class="section-content">
+                    <h2>About</h2>
+                    <p>
+                        Battery Alert Pro is a modern utility for Windows 11 and Windows 10 designed to help you protect and manage your laptop's battery health. By performing customizable actions when your battery is too low or too high, this tool helps you avoid overcharging and deep discharging, extending the lifespan of your battery. It runs silently in the background with no ads.
+                    </p>
+                </div>
+            </section>
+
+            <!-- FEATURES SECTION -->
+            <section id="features" class="section">
+                <div class="section-bg-text">Features</div>
+                <div class="section-content">
+                    <h2>Features</h2>
+                    <ul class="features-list">
+                        <li><b>Low & High Battery Alerts</b> to prevent over-draining and overcharging.</li>
+                        <li><b>Customizable Actions:</b> Choose from a looping sine-wave beep, playing a custom MP3, running a batch script, or a visual screen alert.</li>
+                        <li><b>Timed Actions:</b> Set a duration for any alert, after which the action (including scripts) is automatically terminated.</li>
+                        <li><b>"Finally" Actions:</b> Automatically put your computer to sleep or shut it down after an alert duration expires.</li>
+                        <li><b>Smart Hysteresis:</b> Prevents constant, annoying alerts once a threshold is crossed. Includes a manual re-arm button for full control.</li>
+                        <li><b>Autostart with Windows</b> so your battery is always protected.</li>
+                        <li><b>Silent 7-Day Trial</b> with secure, hardware-bound RSA licensing.</li>
+                        <li><b>Lightweight & Efficient:</b> Runs silently in the system tray with minimal resource usage.</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <!-- REQUIREMENTS SECTION -->
+            <section id="requirements" class="section">
+                <div class="section-bg-text">REQ</div>
+                <div class="section-content">
+                    <h2>Requirements</h2>
+                    <ul class="features-list">
+                        <li><strong>Operating System:</strong> Windows 10 or Later</li>
+                        <li>
+                            <strong>Framework:</strong> Microsoft .NET Desktop Runtime.
+                            <br>
+                            <small>
+                                (If this is not already on your system, Windows will automatically prompt you to download and install this free component from Microsoft when you first run the application.)
+                            </small>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- SCREENSHOTS SECTION -->
+            <section id="screenshots" class="section">
+                <div class="section-bg-text">SCREEN</div>
+                <div class="section-content">
+                    <h2>Screenshots</h2>
+                    <div class="screenshots-grid">
+                        <div class="screenshot-item">
+                            <img src="main_screen.png" alt="Main Settings Interface" 
+                                 style="width: 600px; height: auto;">
+                            <p class="screenshot-caption">Main Settings</p>
+                        </div>
+                       <div class="screenshot-item">
+                            <img src="low_alert.png" alt="Low Alert Alarm" 
+                                 style="width: 300px; height: auto;">
+                            <p class="screenshot-caption">Low Alert Alarm</p>
+                        </div>
+                       <div class="screenshot-item">
+                            <img src="high_alert.png" alt="High Alert Alarm" 
+                                 style="width: 300px; height: auto;">
+                            <p class="screenshot-caption">High Alert Alarm</p>
+                        </div>
+                    </div>
+                </div>
+            </section>            
+            <!-- HOW TO USE SECTION -->
+            <section id="how-to-use" class="section">
+                <div class="section-bg-text">How to</div>
+                <div class="section-content">
+                    <h2>How to use</h2>
+                    <div class="video-grid">
+                        <div class="video-placeholder">
+                            <p>Video: Low Battery Alarm Demo</p>
+                            <a href="https://www.youtube.com/watch?v=ycdaQgICtwI">Watch here</a>
+                        </div>
+                        <div class="video-placeholder">
+                            <p>Video: High Battery Alarm Demo</p>
+                            <a href="https://www.youtube.com/watch?v=mkdHNVuY6BU">Watch here</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DOWNLOAD SECTION -->
+            <section id="download" class="section">
+                <div class="section-bg-text">DWNLD</div>
+                <div class="section-content">
+                    <h2>Download</h2>
+                    <div class="download-box">
+                        <p>Installer / Setup (Recommended)</p>
+                        <a href="BatteryAlertPro_Setup.zip" class="btn btn-primary" download>
+                            DOWNLOAD<br>
+                            <small>Installer (.zip &middot; 1.8 MB)</small>
+                        </a>
+                        <br>
+                        <a href="BatteryAlertProSetup.exe" class="btn-alt" download>Direct .exe download</a>
+                        <p class="note">Your browser or antivirus may warn about a raw <code>.exe</code> file.
+                           If that happens, use the <strong>.zip</strong> above &mdash; it contains the same
+                           <code>BatteryAlertPro_Setup.exe</code>.</p>
+                    </div>
+
+                    <table class="file-list">
+                        <thead>
+                            <tr>
+                                <th>File</th>
+                                <th>Type</th>
+                                <th>Size</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><a href="BatteryAlertPro_Setup.zip" download>BatteryAlertPro_Setup.zip</a></td>
+                                <td>Installer (ZIP)</td>
+                                <td>1.8 MB</td>
+                            </tr>
+                            <tr>
+                                <td><a href="BatteryAlertProSetup.exe" download>BatteryAlertProSetup.exe</a></td>
+                                <td>Installer (EXE)</td>
+                                <td>2.3 MB</td>
+                            </tr>
+                            <tr>
+                                <td><a href="user_manual.pdf" download>user_manual.pdf</a></td>
+                                <td>User manual (PDF)</td>
+                                <td>151 KB</td>
+                            </tr>
+                            <tr>
+                                <td><a href="main_screen.png">main_screen.png</a></td>
+                                <td>Screenshot</td>
+                                <td>37 KB</td>
+                            </tr>
+                            <tr>
+                                <td><a href="low_alert.png">low_alert.png</a></td>
+                                <td>Screenshot</td>
+                                <td>11 KB</td>
+                            </tr>
+                            <tr>
+                                <td><a href="high_alert.png">high_alert.png</a></td>
+                                <td>Screenshot</td>
+                                <td>11 KB</td>
+                            </tr>
+                            <tr>
+                                <td><a href="sys_tray.png">sys_tray.png</a></td>
+                                <td>Screenshot</td>
+                                <td>20 KB</td>
+                            </tr>
+                            <tr>
+                                <td><a href="image.png">image.png</a></td>
+                                <td>Application icon</td>
+                                <td>5 KB</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <a href="buy_now.html" class="btn btn-secondary">BUY NOW</a>
+            <a href="mailto:nova26sy@gmail.com" class="btn btn-secondary">Contact Us</a>
+            <a href="user_manual.pdf" class="btn btn-secondary" download>User Manual</a>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const placeholderLinks = document.querySelectorAll('a[href="#"]');
+            
+            placeholderLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log("Placeholder link clicked, default action prevented.");
+                });
+            });
+        });
+    </script>
+<div>
+<script type="text/javascript" src="https://cdn.livetrafficfeed.com/static/v5/live.js?bc=ffffff&tc=000000&brd1=2853a8&lnk=135d9e&hc=ffffff&hfc=2853a8&nc=19ff19&vv=210&tft=1&ro=0&tz=America%2FNew_York&res=0"></script><noscript id="LTF_live_website_visitor"><a href="http://livetrafficfeed.com">Website Visitor Counter</a></noscript>
+</div>
+</body>
+</html>

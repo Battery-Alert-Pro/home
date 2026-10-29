@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Woteq Software - Purchase Guide</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .woteq-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .woteq-content {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .greeting {
+            color: #2c3e50;
+            margin-bottom: 24px;
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+
+        .intro {
+            font-size: 1.2em;
+            margin-bottom: 24px;
+            color: #444;
+        }
+
+        .highlight {
+            color: #3498db;
+            font-weight: 600;
+        }
+
+        .company-name {
+            color: #e74c3c;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        .honesty-note {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 16px 20px;
+            margin: 30px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .honesty-note p {
+            margin: 0;
+            color: #555;
+            font-style: italic;
+        }
+
+        .purchase-guide {
+            margin: 40px 0;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            color: white;
+        }
+
+        .purchase-guide h2 {
+            color: white;
+            margin-top: 0;
+            margin-bottom: 16px;
+            font-size: 1.8em;
+        }
+
+        .steps {
+            list-style: none;
+            padding: 0;
+            margin: 30px 0 0 0;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .step-number {
+            background: white;
+            color: #764ba2;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            flex-shrink: 0;
+            margin-right: 20px;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .price {
+            background: #ffd166;
+            color: #333;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 0 4px;
+        }
+
+        .email-box {
+            background: white;
+            color: #333;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            margin: 10px 0;
+            font-size: 1.1em;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: inline-block;
+            word-break: break-all;
+        }
+
+        .copy-btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .copy-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .success-icon {
+            display: inline-block;
+            margin-left: 8px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .alternative-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #e8f4fc;
+            border-radius: 10px;
+            border: 1px solid #3498db;
+        }
+
+        .email-link {
+            color: #e74c3c;
+            font-weight: 600;
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+        .email-link:hover {
+            border-bottom: 2px solid #e74c3c;
+        }
+
+        .thank-you {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #eee;
+            text-align: center;
+        }
+
+        .signature {
+            font-size: 1.2em;
+            margin-top: 20px;
+            color: #2c3e50;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #27ae60;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .woteq-content {
+                padding: 20px;
+            }
+            
+            .greeting {
+                font-size: 2em;
+            }
+            
+            .step {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .step-number {
+                margin-bottom: 15px;
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="woteq-container">
+        <div class="woteq-content">
+            <h1 class="greeting">Hello there!</h1>
+            
+            <p class="intro">
+                I'm <span class="highlight">Novak</span>, the founder of <span class="company-name">Woteq Software</span>. 
+                We're a small, passionate team dedicated to creating quality software.
+            </p>
+            
+            <div class="honesty-note">
+                <p>
+                    To be completely honest, we're still in the process of setting up a formal payment gateway on our website - we're a brand-new company!
+                </p>
+            </div>
+            
+            <div class="purchase-guide">
+                <h2>How to Purchase</h2>
+                <p>In the meantime, you can still purchase our software directly. Here's how it works:</p>
+                
+                <ol class="steps">
+                    <li class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            Send <span class="price">$10</span> via PayPal to:
+                            <div class="email-box" id="paypalEmail">nova26sy@gmail.com</div>
+                            <button class="copy-btn" onclick="copyToClipboard('paypalEmail')">
+                                Copy Email
+                            </button>
+                        </div>
+                    </li>
+                    
+                    <li class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            Then, <strong>email a screenshot of your payment confirmation</strong> to the same address:
+                            <div class="email-box" id="confirmEmail">nova26sy@gmail.com</div>
+                            <button class="copy-btn" onclick="copyToClipboard('confirmEmail')">
+                                Copy Email
+                            </button>
+                        </div>
+                    </li>
+                    
+                    <li class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            We'll promptly generate and send your personal license key to you!
+                            <span class="success-icon">?</span>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+            
+            <div class="alternative-section">
+                <p>
+                    If PayPal doesn't work for you, please don't hesitate to 
+                    <a href="mailto:nova26sy@gmail.com" class="email-link">email me directly</a>, 
+                    and we'll figure out an alternative together.
+                </p>
+            </div>
+            
+            <div class="thank-you">
+                <p>Thanks so much for your interest and support as we get things up and running!</p>
+                <p class="signature">Best,<br><strong>Novak & the Woteq Team</strong></p>
+            </div>
+            
+            <div class="notification" id="copyNotification">
+                Email copied to clipboard!
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent || element.innerText;
+            
+            // Create temporary textarea for copying
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            
+            // Show notification
+            const notification = document.getElementById('copyNotification');
+            notification.classList.add('show');
+            
+            // Hide notification after 3 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Add hover effect to email boxes
+        document.querySelectorAll('.email-box').forEach(box => {
+            box.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+                this.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.1)';
+                this.style.transition = 'all 0.3s ease';
+            });
+            
+            box.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
