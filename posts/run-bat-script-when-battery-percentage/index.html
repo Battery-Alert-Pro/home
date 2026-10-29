@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Run a Batch Script When Your Battery Hits a Certain Percentage | Battery Alert Pro</title>
+    <meta name="description" content="Triggering a .bat file when the battery drops below a set level is a two-line job in PowerShell — and a minefield of silent failures. Here is the working version, plus the gotchas that break it.">
+    <meta name="author" content="Woteq Software">
+    <meta name="keywords" content="run bat script when battery low, windows battery threshold script, batch script on low battery, task scheduler battery level trigger">
+    <link rel="icon" type="image/png" href="../../image.png">
+    <link rel="apple-touch-icon" href="../../image.png">
+    <link rel="canonical" href="https://battery-alert-pro.github.io/home/posts/run-bat-script-when-battery-percentage/">
+    <link rel="alternate" type="application/rss+xml" title="Battery Alert Pro Blog" href="../../feed.xml">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="../../blog.css">
+
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Battery Alert Pro">
+    <meta property="og:url" content="https://battery-alert-pro.github.io/home/posts/run-bat-script-when-battery-percentage/">
+    <meta property="og:title" content="How to Run a Batch Script When Your Battery Hits a Certain Percentage | Battery Alert Pro">
+    <meta property="og:description" content="Triggering a .bat file when the battery drops below a set level is a two-line job in PowerShell — and a minefield of silent failures. Here is the working version, plus the gotchas that break it.">
+    <meta property="og:image" content="https://battery-alert-pro.github.io/home/social_card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Battery Alert Pro - smart battery management for Windows">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="How to Run a Batch Script When Your Battery Hits a Certain Percentage | Battery Alert Pro">
+    <meta name="twitter:description" content="Triggering a .bat file when the battery drops below a set level is a two-line job in PowerShell — and a minefield of silent failures. Here is the working version, plus the gotchas that break it.">
+    <meta name="twitter:image" content="https://battery-alert-pro.github.io/home/social_card.png">
+    <meta property="article:published_time" content="2026-10-30">
+    <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "How to Run a Batch Script When Your Battery Hits a Certain Percentage",
+  "description": "Triggering a .bat file when the battery drops below a set level is a two-line job in PowerShell \u2014 and a minefield of silent failures. Here is the working version, plus the gotchas that break it.",
+  "image": "https://battery-alert-pro.github.io/home/social_card.png",
+  "datePublished": "2026-10-30",
+  "dateModified": "2026-10-30",
+  "author": {
+    "@type": "Organization",
+    "name": "Woteq Software"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Woteq Software"
+  },
+  "mainEntityOfPage": "https://battery-alert-pro.github.io/home/posts/run-bat-script-when-battery-percentage/",
+  "wordCount": 1690
+}</script>
+</head>
+<body>
+
+<nav class="topnav">
+    <div class="topnav-inner">
+        <a class="brand" href="../../">
+            <img src="../../image.png" alt="" width="28" height="28">
+            <span>Battery Alert Pro</span>
+        </a>
+        <ul class="topnav-links">
+            <li><a href="../../#features">Features</a></li>
+            <li><a href="../../#screenshots">Screenshots</a></li>
+            <li><a href="../../#download">Download</a></li>
+            <li><a href="../../blog/">Blog</a></li>
+        </ul>
+    </div>
+</nav>
+
+<main class="wrap">
+<article class="post">
+
+    <p class="crumbs"><a href="../../blog/">Blog</a> <span>/</span> How to Run a Batch Script When Your Battery Hits a Certain Percentage</p>
+
+    <h1>How to Run a Batch Script When Your Battery Hits a Certain Percentage</h1>
+
+    <p class="post-meta">
+        <time datetime="2026-10-30">October 30, 2026</time>
+        <span class="sep">&middot;</span>
+        <span>8 min read</span>
+        <a class="tag" href="../../blog/tag/automation/">Automation</a><a class="tag" href="../../blog/tag/battery-alerts/">Battery Alerts</a><a class="tag" href="../../blog/tag/windows-11/">Windows 11</a>
+    </p>
+
+    <div class="prose">
+<p>There is a moment in most people&rsquo;s working day where the laptop battery stops being a background detail and becomes the whole problem. You are forty minutes into something, the charger is three rooms away, and you would give a lot for the machine to do <em>something</em> — run your backup script, fire off a notification to your phone, sync the folder you were just working in.</p>
+<p>Windows does not let you attach an action to a battery percentage. There is no &ldquo;when battery drops below 20%, run this&rdquo; switch anywhere in Settings. But it is a short script, and once you have it, you can hang anything you like off that trigger.</p>
+<p>Here is the working version, and then the handful of reasons it silently does nothing.</p>
+<h2 id="the-short-version">The short version</h2>
+<p>Save this as <code>battery-guard.ps1</code>:</p>
+<pre><code class="language-powershell">param(
+    [int]$Threshold = 20,
+    [string]$Script = &quot;C:\Scripts\on-low-battery.bat&quot;
+)
+
+$log = Join-Path $PSScriptRoot &quot;battery-guard.log&quot;
+
+function Write-Log([string]$Message) {
+    &quot;$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')  $Message&quot; |
+        Out-File -FilePath $log -Append
+}
+
+while ($true) {
+    $battery = Get-CimInstance -ClassName Win32_Battery -ErrorAction SilentlyContinue |
+               Select-Object -First 1
+
+    if ($null -eq $battery) {
+        Write-Log &quot;No battery detected. Exiting.&quot;
+        break
+    }
+
+    # BatteryStatus 1 = discharging, 2 = on AC power
+    $onBattery = $battery.BatteryStatus -eq 1
+    $level     = [int]$battery.EstimatedChargeRemaining
+
+    if ($onBattery -and $level -le $Threshold) {
+        Write-Log &quot;Battery at $level% - running $Script&quot;
+        &amp; $Script
+        Write-Log &quot;Script finished, exit code $LASTEXITCODE&quot;
+        break
+    }
+
+    Start-Sleep -Seconds 30
+}
+</code></pre>
+<p>Run it once by hand to be sure, then wire it to start with Windows (Task Scheduler → <strong>Create Task</strong> → General tab → tick <strong>Run whether user is logged on or not</strong> → Triggers tab → <strong>At startup</strong>).</p>
+<p>That is the whole idea. Everything below is what goes wrong when you try to make it reliable.</p>
+<h2 id="why-the-obvious-version-fails">Why the obvious version fails</h2>
+<p>Most published scripts in this space look almost identical to the one above and then do absolutely nothing on the user&rsquo;s machine. Five causes, roughly in order of how often they bite.</p>
+<h3 id="1-there-is-no-battery-so-there-is-no-object-to-read">1. There is no battery, so there is no object to read</h3>
+<p><code>Get-CimInstance Win32_Battery</code> returns nothing on a desktop or a laptop with the battery removed. A script without a null check then dereferences <code>$null</code> and either throws on the first line or, worse, quietly evaluates the comparison as false forever.</p>
+<p>The <code>if ($null -eq $battery)</code> guard is not defensive programming noise. It is the single most common reason a battery script &ldquo;does not work&rdquo; on a machine the author never tested on.</p>
+<h3 id="2-task-scheduler-does-not-run-your-script-from-your-script-folder">2. Task Scheduler does not run your script from your script folder</h3>
+<p>The default working directory for a scheduled task is <code>C:\Windows\System32</code>. Any relative path in your <code>.bat</code> — including relative paths to the <code>.bat</code> itself — resolves somewhere else entirely. This is why a script that ran perfectly when you double-clicked it fails at 3am.</p>
+<p>Two fixes: use absolute paths everywhere, or put <code>Set-Location $PSScriptRoot</code> at the top of the PowerShell script. Absolute paths are less clever and more reliable.</p>
+<h3 id="3-task-scheduler-kills-your-loop-after-three-days">3. Task Scheduler kills your loop after three days</h3>
+<p>The default &ldquo;Stop the task if it runs longer than&rdquo; limit is 72 hours. A <code>while ($true)</code> polling loop will be terminated on day three, quietly, and never start again.</p>
+<p>In the Task Scheduler UI: <strong>Settings tab</strong> → tick <strong>If the task is running, do not stop it</strong> → &ldquo;Stop the task if it runs longer than&rdquo; → set to 1 hour (or tick &ldquo;Do not stop the task&rdquo;). In the XML this is <code>&lt;ExecutionTimeLimit&gt;PT0S&lt;/ExecutionTimeLimit&gt;</code>.</p>
+<h3 id="4-run-whether-user-is-logged-on-or-not-is-not-who-you-think-it-is">4. &ldquo;Run whether user is logged on or not&rdquo; is not who you think it is</h3>
+<p>This is the one that catches everybody. The option runs the task <strong>as the user account</strong> but <em>without</em> that user&rsquo;s session — no mapped network drives, no <code>C:\Users\You\Desktop</code>, no access to anything that needs your interactive login.</p>
+<p>Tick it and your script loses your drive letters. Leave it unticked and the task only runs while you are logged in, which defeats the purpose.</p>
+<p>The clean answer is to run the task as <strong>SYSTEM</strong> (System account, run with highest privileges). SYSTEM sees the whole filesystem. The cost is that SYSTEM has no network drive mappings, so anything in your script that touches <code>Z:\</code> needs to map it explicitly first.</p>
+<h3 id="5-the-percentage-is-an-estimate-not-a-measurement">5. The percentage is an estimate, not a measurement</h3>
+<p><code>EstimatedChargeRemaining</code> is a number the firmware reports. It is usually an integer, it can lag reality, and on some machines it does not update at all while the battery is above 20%. It is close enough for a threshold trigger, but do not build anything precise on top of it — and do not expect it to match the Windows battery icon to the digit.</p>
+<p>Also add the <code>BatteryStatus -eq 1</code> check. Without it, the script fires on a full battery sitting on the charger, because 100% is not below 20% only by accident of the comparison direction.</p>
+<h2 id="the-event-driven-version-if-you-want-to-skip-polling">The event-driven version, if you want to skip polling</h2>
+<p>Polling every thirty seconds is not elegant. WMI can tell you when the battery object actually changes, instead of you asking it constantly:</p>
+<pre><code class="language-powershell">$Threshold = 20
+
+Register-CimEvent -Query @&quot;
+    SELECT * FROM __InstanceModificationEvent WITHIN 15
+    WHERE TargetInstance ISA 'Win32_Battery'
+&quot;@ -Action {
+    $b = $Event.SourceEventArgs.NewEvent.TargetInstance
+    if ($b.BatteryStatus -eq 1 -and [int]$b.EstimatedChargeRemaining -le $Threshold) {
+        &amp; &quot;C:\Scripts\on-low-battery.bat&quot;
+    }
+}
+</code></pre>
+<p>The <code>WITHIN 15</code> is the sampling window WMI uses to detect changes — it is still periodic under the hood, but the event only fires when something actually moved.</p>
+<p>Two caveats. <code>Register-CimEvent -Action</code> blocks run in their own scope, so variables from the enclosing script are not always visible inside them; pass the threshold in explicitly or read it from a file. And this still needs a long-lived PowerShell process, so it does not escape the need for a startup task.</p>
+<p>You can also register the same query directly in Task Scheduler, which removes the long-lived process entirely. Export a task to XML, and inside <code>&lt;Triggers&gt;</code> put:</p>
+<pre><code class="language-xml">&lt;WmiEventTrigger&gt;
+  &lt;Query&gt;
+    &lt;![CDATA[
+      SELECT * FROM __InstanceModificationEvent WITHIN 60
+      WHERE TargetInstance ISA 'Win32_Battery'
+    ]]&gt;
+  &lt;/Query&gt;
+&lt;/WmiEventTrigger&gt;
+</code></pre>
+<p>Then the task fires on the event, runs once, and exits. No loop, no three-day limit, no orphaned PowerShell session.</p>
+<h2 id="what-to-actually-run-when-it-fires">What to actually run when it fires</h2>
+<p>The trigger is the easy half. Here are three <code>.bat</code> files worth having.</p>
+<p><strong>Notify yourself properly.</strong> A beep on a laptop in another room is a beep you will not hear. Push it somewhere you will:</p>
+<pre><code class="language-bat">@echo off
+powershell -NoProfile -Command ^
+  &quot;New-BurntToastNotification -Text 'Battery low' -Message 'Plug in now - %computername%' -Sound 'Warning'&quot;
+</code></pre>
+<p><code>New-BurntToastNotification</code> is from the free BurntToast module (<code>Install-Module BurntToast</code>). Swap it for a <code>curl</code> call to a webhook if you run a local home server.</p>
+<p><strong>Back up the work you have not saved.</strong> A tool that grabs whatever you were working in, before the machine decides it is done:</p>
+<pre><code class="language-bat">@echo off
+robocopy &quot;C:\Users\%USERNAME%\Documents\Work&quot; &quot;Z:\Backups\work&quot; /MIR /R:1 /W:1 /LOG+:&quot;C:\Scripts\backup.log&quot;
+</code></pre>
+<p><code>/MIR</code> mirrors, so deleted files get removed on the destination too — make sure that is what you want before pointing it at anything you care about.</p>
+<p><strong>Log it, so you can prove when it fired.</strong> The habit of writing a timestamped line costs nothing and saves a lot of guessing later:</p>
+<pre><code class="language-bat">@echo off
+echo %date% %time% battery threshold reached &gt;&gt; C:\Scripts\trigger.log
+</code></pre>
+<h2 id="the-part-that-bites-scripts-that-will-not-stop">The part that bites: scripts that will not stop</h2>
+<p>Here is the failure mode that makes people give up on this approach entirely.</p>
+<p>A <code>.bat</code> file that starts a long-running process and returns immediately leaves that process running. Task Scheduler considers the task finished, the battery script carries on, and you end up with orphaned copies of whatever it launched. Worse, nothing stops them when the battery situation resolves — the backup runs again, the notification fires again, and eventually something is fighting over the same file.</p>
+<p>Fixing this by hand means tracking process IDs and killing process trees, which is exactly the sort of bookkeeping a small utility should be doing for you.</p>
+<p><a href="../../#download">Battery Alert Pro</a> runs a <code>.bat</code> directly from its settings window: pick <strong>Run Bat Script</strong>, browse to the file, and set the behaviour. The part worth knowing is the duration. As the manual puts it, <em>&ldquo;If a duration is set, the script and any processes it started will be terminated when the time is up.&rdquo;</em> Not just the script — the child processes it spawned. You set a threshold, the alert runs, your script runs, and when the timer expires the whole tree is cleaned up.</p>
+<p>The other half of that screen is the <strong>Finally</strong> action, and it is the reason this beats doing it by hand. Your script can start a five-minute backup at 20%, and then the machine sleeps or shuts down on purpose once the backup finishes — with the work saved and the outcome announced, instead of Windows pulling the plug at 5% while your script is still writing.</p>
+<p>If you only ever run one thing on a battery threshold, run something that saves your work. Everything else is optional.</p>
+<h2 id="a-checklist-before-you-trust-it">A checklist before you trust it</h2>
+<ul>
+<li>Run it manually first, with the threshold set high enough to trigger immediately — confirm the <code>.bat</code> path is right</li>
+<li>Add the null check for no battery</li>
+<li>Use absolute paths, or <code>Set-Location $PSScriptRoot</code></li>
+<li>Set the task&rsquo;s execution time limit to unlimited</li>
+<li>Decide deliberately between running as your user (needs a password, loses drive mappings) or as SYSTEM (sees everything, no network drives)</li>
+<li>Add a log line so you can tell &ldquo;it did not fire&rdquo; from &ldquo;it fired and the script failed&rdquo;</li>
+<li>Check the event that your script starts has actually stopped before the next threshold — or let a tool with a duration handle it</li>
+</ul>
+<p>More on the notification side of this, including why a Windows toast in the corner of the screen is not a warning, in <a href="../../posts/windows-battery-warning-10-percent/">the post on what the default battery alerts actually do</a>. And if the real problem is that you work in long blocks where any interruption costs you an hour, that is worth reading about separately too: <a href="../../posts/adhd-laptop-shutdown-lost-work/">ADHD and lost work</a>.</p>
+    </div>
+
+    <div class="cta">
+        <h2>Never lose work to a surprise shutdown</h2>
+        <p>
+            Battery Alert Pro warns you when your battery drops below the level you choose,
+            with a custom sound or on-screen alert, and an optional action that runs when
+            the timer expires. It lives quietly in the system tray and costs $10 for a
+            lifetime license.
+        </p>
+        <p>
+            <a class="btn btn-primary" href="../../#download">Download for Windows</a>
+            <a class="btn btn-secondary" href="../../buy_now.html">Buy a license</a>
+        </p>
+    </div>
+
+    <div class="related"><h2>Keep reading</h2><ul><li><a href="../../posts/windows-battery-warning-10-percent/">Windows Only Warns You at 10% Battery. Here&#x27;s How to Get Warned Earlier</a><span class="muted"> &mdash; October 29, 2026</span></li><li><a href="../../posts/best-battery-monitoring-software-windows-11/">Best Battery Monitoring Software for Windows 11 (2026)</a><span class="muted"> &mdash; October 27, 2026</span></li><li><a href="../../posts/adhd-laptop-shutdown-lost-work/">ADHD and Lost Work: Why Your Laptop Dying Is an Executive Function Problem</a><span class="muted"> &mdash; October 28, 2026</span></li></ul></div>
+
+</article>
+
+</main>
+
+<footer class="sitefoot">
+    <p class="foot-links">
+        <a href="../../">Home</a> &middot;
+        <a href="../../blog/">Blog</a> &middot;
+        <a href="../../buy_now.html">Buy now</a> &middot;
+        <a href="../../user_manual.pdf">User manual</a> &middot;
+        <a href="../../feed.xml">RSS</a>
+    </p>
+    <p class="foot-note">&copy; 2026 Woteq Software. Battery Alert Pro is a Windows utility.</p>
+</footer>
+
+</body>
+</html>
