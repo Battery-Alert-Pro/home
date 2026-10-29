@@ -1,8 +1,9 @@
 ---
 title: "How to Run a Batch Script When Your Battery Hits a Certain Percentage"
+seo_title: Run a Batch Script When Your Battery Hits X%
 slug: run-bat-script-when-battery-percentage
 date: 2026-10-30
-description: "Triggering a .bat file when the battery drops below a set level is a two-line job in PowerShell — and a minefield of silent failures. Here is the working version, plus the gotchas that break it."
+description: "Running a .bat when the battery drops below a set level is easy in PowerShell and a minefield of silent failures. The working version, plus the gotchas."
 keywords: "run bat script when battery low, windows battery threshold script, batch script on low battery, task scheduler battery level trigger"
 tags: [Automation, Battery Alerts, Windows 11]
 ---

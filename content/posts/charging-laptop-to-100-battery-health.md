@@ -1,8 +1,9 @@
 ---
 title: "Charging Your Laptop to 100% Is Damaging Your Battery. Do This Instead"
+seo_title: Charging to 100%: What Actually Damages Batteries
 slug: charging-laptop-to-100-battery-health
 date: 2026-10-26
-description: "Modern lithium-ion cells are not ruined by a full charge. The real culprits are heat and time spent sitting at 100%. Here is what actually shortens battery life."
+description: "Modern lithium-ion cells are not ruined by a full charge. The real culprits are heat and time at 100%. What actually shortens battery life."
 keywords: "charging laptop to 100 battery damage, laptop battery health, charge limit 80 percent windows 11, extend laptop battery life"
 tags: [Battery Health, Laptop Care, Windows 11]
 ---

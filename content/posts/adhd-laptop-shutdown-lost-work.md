@@ -1,8 +1,9 @@
 ---
 title: "ADHD and Lost Work: Why Your Laptop Dying Is an Executive Function Problem"
+seo_title: ADHD and Lost Work: How a Battery Alert Saves It
 slug: adhd-laptop-shutdown-lost-work
 date: 2026-10-28
-description: "A surprise shutdown costs everyone a file. For people with ADHD it costs something else too: the momentum. Here is why the standard advice fails, and what to change instead."
+description: "A surprise shutdown costs everyone a file. With ADHD it costs the momentum too. Why the standard advice fails, and what to change instead."
 keywords: "ADHD losing work, ADHD productivity tools windows, ADHD time blindness, how to stop losing unsaved work"
 tags: [ADHD, Productivity, Battery Alerts]
 ---

@@ -3,52 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>How to Run a Batch Script When Your Battery Hits a Certain Percentage | Battery Alert Pro</title>
-    <meta name="description" content="Triggering a .bat file when the battery drops below a set level is a two-line job in PowerShell — and a minefield of silent failures. Here is the working version, plus the gotchas that break it.">
+    <title>Run a Batch Script When Your Battery Hits X% | Battery Alert Pro</title>
+    <meta name="description" content="Running a .bat when the battery drops below a set level is easy in PowerShell and a minefield of silent failures. The working version, plus the gotchas.">
     <meta name="author" content="Woteq Software">
     <meta name="keywords" content="run bat script when battery low, windows battery threshold script, batch script on low battery, task scheduler battery level trigger">
+    
     <link rel="icon" type="image/png" href="../../image.png">
     <link rel="apple-touch-icon" href="../../image.png">
     <link rel="canonical" href="https://battery-alert-pro.github.io/home/posts/run-bat-script-when-battery-percentage/">
     <link rel="alternate" type="application/rss+xml" title="Battery Alert Pro Blog" href="../../feed.xml">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <!-- Roboto, self-hosted. A third-party stylesheet link is render-blocking
+         and costs a DNS + TLS round trip before anything can paint. -->
+    <link rel="preload" href="../../fonts/roboto-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="../../blog.css">
 
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Battery Alert Pro">
     <meta property="og:url" content="https://battery-alert-pro.github.io/home/posts/run-bat-script-when-battery-percentage/">
-    <meta property="og:title" content="How to Run a Batch Script When Your Battery Hits a Certain Percentage | Battery Alert Pro">
-    <meta property="og:description" content="Triggering a .bat file when the battery drops below a set level is a two-line job in PowerShell — and a minefield of silent failures. Here is the working version, plus the gotchas that break it.">
+    <meta property="og:title" content="Run a Batch Script When Your Battery Hits X% | Battery Alert Pro">
+    <meta property="og:description" content="Running a .bat when the battery drops below a set level is easy in PowerShell and a minefield of silent failures. The working version, plus the gotchas.">
     <meta property="og:image" content="https://battery-alert-pro.github.io/home/social_card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Battery Alert Pro - smart battery management for Windows">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="How to Run a Batch Script When Your Battery Hits a Certain Percentage | Battery Alert Pro">
-    <meta name="twitter:description" content="Triggering a .bat file when the battery drops below a set level is a two-line job in PowerShell — and a minefield of silent failures. Here is the working version, plus the gotchas that break it.">
+    <meta name="twitter:title" content="Run a Batch Script When Your Battery Hits X% | Battery Alert Pro">
+    <meta name="twitter:description" content="Running a .bat when the battery drops below a set level is easy in PowerShell and a minefield of silent failures. The working version, plus the gotchas.">
     <meta name="twitter:image" content="https://battery-alert-pro.github.io/home/social_card.png">
     <meta property="article:published_time" content="2026-10-30">
     <script type="application/ld+json">{
   "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "How to Run a Batch Script When Your Battery Hits a Certain Percentage",
-  "description": "Triggering a .bat file when the battery drops below a set level is a two-line job in PowerShell \u2014 and a minefield of silent failures. Here is the working version, plus the gotchas that break it.",
-  "image": "https://battery-alert-pro.github.io/home/social_card.png",
-  "datePublished": "2026-10-30",
-  "dateModified": "2026-10-30",
-  "author": {
-    "@type": "Organization",
-    "name": "Woteq Software"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Woteq Software"
-  },
-  "mainEntityOfPage": "https://battery-alert-pro.github.io/home/posts/run-bat-script-when-battery-percentage/",
-  "wordCount": 1690
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "headline": "Run a Batch Script When Your Battery Hits X%",
+      "name": "Run a Batch Script When Your Battery Hits X%",
+      "description": "Running a .bat when the battery drops below a set level is easy in PowerShell and a minefield of silent failures. The working version, plus the gotchas.",
+      "image": "https://battery-alert-pro.github.io/home/social_card.png",
+      "datePublished": "2026-10-30",
+      "dateModified": "2026-10-30",
+      "author": {
+        "@type": "Organization",
+        "name": "Woteq Software"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Woteq Software"
+      },
+      "mainEntityOfPage": "https://battery-alert-pro.github.io/home/posts/run-bat-script-when-battery-percentage/",
+      "wordCount": 1690,
+      "keywords": "run bat script when battery low, windows battery threshold script, batch script on low battery, task scheduler battery level trigger",
+      "articleSection": [
+        "Automation",
+        "Battery Alerts",
+        "Windows 11"
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://battery-alert-pro.github.io/home/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://battery-alert-pro.github.io/home/blog/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Run a Batch Script When Your Battery Hits X%",
+          "item": "https://battery-alert-pro.github.io/home/posts/run-bat-script-when-battery-percentage/"
+        }
+      ]
+    }
+  ]
 }</script>
 </head>
 <body>

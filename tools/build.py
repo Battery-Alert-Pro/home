@@ -42,6 +42,19 @@ SLUG_RE = re.compile(r"[^a-z0-9]+")
 DATE_FMT = "%Y-%m-%d"
 WORDS_PER_MINUTE = 220
 
+# A tag archive with a single post duplicates that post. Keep those out of
+# the index; Google still follows their links, so internal linking survives.
+MIN_POSTS_TO_INDEX_TAG = 2
+
+# Paths that exist in the published tree but are build inputs, not content.
+CRAWL_DISALLOW = [
+    "/tools/",
+    "/templates/",
+    "/content/",
+    "/requirements.txt",
+    "/_config.yml",
+]
+
 
 # --------------------------------------------------------------------------
 # helpers
@@ -131,6 +144,22 @@ def meta_tag(name, content, attr="name"):
     return f'<meta {attr}="{name}" content="{html.escape(content, quote=True)}">'
 
 
+def jsonld_block(data):
+    """Wrap structured data in a script tag, or return nothing when empty."""
+    if not data:
+        return ""
+    return '<script type="application/ld+json">' + json.dumps(data, indent=2) + "</script>"
+
+
+def clamp(text, limit=155):
+    """Trim a meta description to a length search engines will actually show."""
+    text = " ".join(text.split())
+    if len(text) <= limit:
+        return text
+    cut = text[:limit].rsplit(" ", 1)[0].rstrip(",;:.—-")
+    return cut + "..."
+
+
 def write(path, text):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
@@ -162,6 +191,8 @@ def load_posts():
             {
                 "slug": slug,
                 "title": meta.get("title", slug),
+                # seo_title is the SERP title; the H1 keeps the longer form.
+                "seo_title": meta.get("seo_title", meta.get("title", slug)),
                 "description": meta.get("description", ""),
                 "date": date,
                 "pretty_date": pretty_date(date),
@@ -178,17 +209,19 @@ def load_posts():
     return posts
 
 
-def base_slots(post, prefix, url, og_type, published_time=""):
+def page_slots(*, title, description, url, prefix, og_type="website",
+               published_time="", robots="", keywords="", jsonld=""):
     return {
-        "title": esc(f'{post["title"]} | {SITE_NAME}'),
-        "description": esc(post["description"]),
-        "keywords_meta": meta_tag("keywords", post.get("keywords", "")),
+        "title": esc(title),
+        "description": esc(description),
+        "keywords_meta": meta_tag("keywords", keywords),
+        "robots_meta": meta_tag("robots", robots),
         "published_meta": meta_tag("article:published_time", published_time, attr="property"),
         "canonical": url,
         "og_image": f"{SITE_URL}/social_card.png",
         "og_type": og_type,
         "prefix": prefix,
-        "jsonld": "",
+        "jsonld": jsonld_block(jsonld),
     }
 
 
@@ -224,7 +257,43 @@ def build_post_pages(posts):
                 f"<ul>{items}</ul></div>"
             )
 
-        slots = base_slots(post, prefix, url, "article", post["date"])
+        slots = page_slots(
+            title=f'{post["seo_title"]} | {SITE_NAME}',
+            description=post["description"],
+            url=url,
+            prefix=prefix,
+            og_type="article",
+            published_time=post["date"],
+            keywords=post["keywords"],
+            jsonld={
+                "@context": "https://schema.org",
+                "@graph": [
+                    {
+                        "@type": "BlogPosting",
+                        "headline": post["seo_title"],
+                        "name": post["seo_title"],
+                        "description": post["description"],
+                        "image": f"{SITE_URL}/social_card.png",
+                        "datePublished": post["date"],
+                        "dateModified": post["date"],
+                        "author": {"@type": "Organization", "name": PUBLISHER},
+                        "publisher": {"@type": "Organization", "name": PUBLISHER},
+                        "mainEntityOfPage": url,
+                        "wordCount": post["words"],
+                        "keywords": post["keywords"],
+                        "articleSection": post["tags"],
+                    },
+                    {
+                        "@type": "BreadcrumbList",
+                        "itemListElement": [
+                            {"@type": "ListItem", "position": 1, "name": "Home", "item": f"{SITE_URL}/"},
+                            {"@type": "ListItem", "position": 2, "name": "Blog", "item": f"{SITE_URL}/blog/"},
+                            {"@type": "ListItem", "position": 3, "name": post["seo_title"], "item": url},
+                        ],
+                    },
+                ],
+            },
+        )
         slots.update(
             {
                 "h1": esc(post["title"]),
@@ -234,22 +303,6 @@ def build_post_pages(posts):
                 "tags_html": rewrite_root_links(tags_html, prefix),
                 "body": rewrite_root_links(post["body"], prefix),
                 "related_html": rewrite_root_links(related_html, prefix),
-                "jsonld": json.dumps(
-                    {
-                        "@context": "https://schema.org",
-                        "@type": "BlogPosting",
-                        "headline": post["title"],
-                        "description": post["description"],
-                        "image": f"{SITE_URL}/social_card.png",
-                        "datePublished": post["date"],
-                        "dateModified": post["date"],
-                        "author": {"@type": "Organization", "name": PUBLISHER},
-                        "publisher": {"@type": "Organization", "name": PUBLISHER},
-                        "mainEntityOfPage": url,
-                        "wordCount": post["words"],
-                    },
-                    indent=2,
-                ),
             }
         )
 
@@ -271,11 +324,33 @@ def build_blog_index(posts):
         for post in posts
     )
 
-    slots = base_slots(
-        {"title": "Blog", "description": "", "keywords": ""},
-        "../",
-        f"{SITE_URL}/blog/",
-        "website",
+    description = clamp(
+        "Practical articles on Windows battery alerts, laptop battery health, "
+        "running scripts at a battery threshold, and protecting unsaved work."
+    )
+
+    slots = page_slots(
+        title=f"Battery Alert Pro Blog | {SITE_NAME}",
+        description=description,
+        url=f"{SITE_URL}/blog/",
+        prefix="../",
+        jsonld={
+            "@context": "https://schema.org",
+            "@type": "Blog",
+            "name": f"{SITE_NAME} Blog",
+            "description": description,
+            "url": f"{SITE_URL}/blog/",
+            "publisher": {"@type": "Organization", "name": PUBLISHER},
+            "blogPost": [
+                {
+                    "@type": "BlogPosting",
+                    "headline": post["seo_title"],
+                    "url": f"{SITE_URL}/posts/{post['slug']}/",
+                    "datePublished": post["date"],
+                }
+                for post in posts
+            ],
+        },
     )
     slots.update(
         {
@@ -304,11 +379,27 @@ def build_tag_pages(posts):
             for post in tagged
         )
 
-        slots = base_slots(
-            {"title": tag, "description": "", "keywords": ""},
-            "../../../",
-            f"{SITE_URL}/blog/tag/{slugify(tag)}/",
-            "website",
+        indexed = len(tagged) >= MIN_POSTS_TO_INDEX_TAG
+        description = clamp(
+            f"Articles about {tag.lower()} from the Battery Alert Pro blog: "
+            + "; ".join(post["description"] for post in tagged[:2])
+        )
+
+        slots = page_slots(
+            title=f"{tag} Articles & Guides | {SITE_NAME}",
+            description=description,
+            url=f"{SITE_URL}/blog/tag/{slugify(tag)}/",
+            prefix="../../../",
+            robots="index, follow" if indexed else "noindex, follow",
+            jsonld={
+                "@context": "https://schema.org",
+                "@type": "CollectionPage",
+                "name": f"{tag} articles",
+                "description": description,
+                "url": f"{SITE_URL}/blog/tag/{slugify(tag)}/",
+            }
+            if indexed
+            else None,
         )
         slots.update(
             {
@@ -324,15 +415,23 @@ def build_tag_pages(posts):
 
 
 def build_sitemap(posts):
+    newest = max((post["date"] for post in posts), default=DATE_FMT)
     urls = [
-        (f"{SITE_URL}/", None, "1.0"),
+        (f"{SITE_URL}/", newest, "1.0"),
+        (f"{SITE_URL}/blog/", newest, "0.8"),
         (f"{SITE_URL}/buy_now.html", None, "0.6"),
-        (f"{SITE_URL}/blog/", None, "0.8"),
     ]
     for post in posts:
         urls.append((f"{SITE_URL}/posts/{post['slug']}/", post["date"], "0.9"))
-    for tag in sorted({t for post in posts for t in post["tags"]}):
-        urls.append((f"{SITE_URL}/blog/tag/{slugify(tag)}/", None, "0.4"))
+
+    # Only tag archives with enough content to stand on their own.
+    counts = {}
+    for post in posts:
+        for tag in post["tags"]:
+            counts[tag] = counts.get(tag, 0) + 1
+    for tag, count in sorted(counts.items()):
+        if count >= MIN_POSTS_TO_INDEX_TAG:
+            urls.append((f"{SITE_URL}/blog/tag/{slugify(tag)}/", None, "0.4"))
 
     seen = set()
     parts = []
@@ -397,10 +496,10 @@ def build_feed(posts):
 
 
 def build_robots():
-    write(
-        ROOT / "robots.txt",
-        "User-agent: *\nAllow: /\n\n" f"Sitemap: {SITE_URL}/sitemap.xml\n",
-    )
+    lines = ["User-agent: *", "Allow: /"]
+    lines += [f"Disallow: {path}" for path in CRAWL_DISALLOW]
+    lines += ["", f"Sitemap: {SITE_URL}/sitemap.xml"]
+    write(ROOT / "robots.txt", "\n".join(lines) + "\n")
 
 
 def main():
@@ -414,7 +513,11 @@ def main():
 
     print(f"built {len(posts)} posts")
     for post in posts:
-        print(f"  /posts/{post['slug']}/  ({post['words']} words, {post['reading_time']} min)")
+        print(
+            f"  /posts/{post['slug']}/  "
+            f"({post['words']} words, {post['reading_time']} min)  "
+            f"title={len(post['seo_title']) + len(SITE_NAME) + 3} chars"
+        )
 
 
 if __name__ == "__main__":

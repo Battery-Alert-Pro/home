@@ -1,8 +1,9 @@
 ---
 title: "Windows Only Warns You at 10% Battery. Here's How to Get Warned Earlier"
+seo_title: Windows Low Battery Warning: Get Alerts Sooner
 slug: windows-battery-warning-10-percent
 date: 2026-10-29
-description: "Windows warns you at 20% and 10% battery, then can shut down at 5%. Here is what the defaults actually mean, how to change them, and how to get an alert you cannot miss."
+description: "Windows warns at 20% and 10% battery, then can shut down at 5%. What the defaults mean, how to change them, and how to get an alert you cannot miss."
 keywords: "windows 11 low battery notification, custom battery alert, critical battery level, prevent laptop shutdown windows"
 tags: [Battery Alerts, Windows 11, Productivity]
 ---

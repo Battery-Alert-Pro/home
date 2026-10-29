@@ -3,35 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog | Battery Alert Pro</title>
-    <meta name="description" content="">
+    <title>Battery Alert Pro Blog | Battery Alert Pro</title>
+    <meta name="description" content="Practical articles on Windows battery alerts, laptop battery health, running scripts at a battery threshold, and protecting unsaved work.">
     <meta name="author" content="Woteq Software">
+    
     
     <link rel="icon" type="image/png" href="../image.png">
     <link rel="apple-touch-icon" href="../image.png">
     <link rel="canonical" href="https://battery-alert-pro.github.io/home/blog/">
     <link rel="alternate" type="application/rss+xml" title="Battery Alert Pro Blog" href="../feed.xml">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <!-- Roboto, self-hosted. A third-party stylesheet link is render-blocking
+         and costs a DNS + TLS round trip before anything can paint. -->
+    <link rel="preload" href="../fonts/roboto-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="../blog.css">
 
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Battery Alert Pro">
     <meta property="og:url" content="https://battery-alert-pro.github.io/home/blog/">
-    <meta property="og:title" content="Blog | Battery Alert Pro">
-    <meta property="og:description" content="">
+    <meta property="og:title" content="Battery Alert Pro Blog | Battery Alert Pro">
+    <meta property="og:description" content="Practical articles on Windows battery alerts, laptop battery health, running scripts at a battery threshold, and protecting unsaved work.">
     <meta property="og:image" content="https://battery-alert-pro.github.io/home/social_card.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Battery Alert Pro - smart battery management for Windows">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Blog | Battery Alert Pro">
-    <meta name="twitter:description" content="">
+    <meta name="twitter:title" content="Battery Alert Pro Blog | Battery Alert Pro">
+    <meta name="twitter:description" content="Practical articles on Windows battery alerts, laptop battery health, running scripts at a battery threshold, and protecting unsaved work.">
     <meta name="twitter:image" content="https://battery-alert-pro.github.io/home/social_card.png">
     
-    <script type="application/ld+json"></script>
+    <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "name": "Battery Alert Pro Blog",
+  "description": "Practical articles on Windows battery alerts, laptop battery health, running scripts at a battery threshold, and protecting unsaved work.",
+  "url": "https://battery-alert-pro.github.io/home/blog/",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Woteq Software"
+  },
+  "blogPost": [
+    {
+      "@type": "BlogPosting",
+      "headline": "Run a Batch Script When Your Battery Hits X%",
+      "url": "https://battery-alert-pro.github.io/home/posts/run-bat-script-when-battery-percentage/",
+      "datePublished": "2026-10-30"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "Windows Low Battery Warning: Get Alerts Sooner",
+      "url": "https://battery-alert-pro.github.io/home/posts/windows-battery-warning-10-percent/",
+      "datePublished": "2026-10-29"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "ADHD and Lost Work: How a Battery Alert Saves It",
+      "url": "https://battery-alert-pro.github.io/home/posts/adhd-laptop-shutdown-lost-work/",
+      "datePublished": "2026-10-28"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "Best Battery Monitoring Tools for Windows 11",
+      "url": "https://battery-alert-pro.github.io/home/posts/best-battery-monitoring-software-windows-11/",
+      "datePublished": "2026-10-27"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "Charging to 100%: What Actually Damages Batteries",
+      "url": "https://battery-alert-pro.github.io/home/posts/charging-laptop-to-100-battery-health/",
+      "datePublished": "2026-10-26"
+    }
+  ]
+}</script>
 </head>
 <body>
 
@@ -60,7 +103,7 @@
 </div>
 
 <div class="post-list">
-<article class="post-card"><h2><a href="../posts/run-bat-script-when-battery-percentage/">How to Run a Batch Script When Your Battery Hits a Certain Percentage</a></h2><p class="meta"><time datetime="2026-10-30">October 30, 2026</time> &middot; 8 min read</p><p class="excerpt">Triggering a .bat file when the battery drops below a set level is a two-line job in PowerShell — and a minefield of silent failures. Here is the working version, plus the gotchas that break it.</p><a class="read-more" href="../posts/run-bat-script-when-battery-percentage/">Read article &rarr;</a></article><article class="post-card"><h2><a href="../posts/windows-battery-warning-10-percent/">Windows Only Warns You at 10% Battery. Here&#x27;s How to Get Warned Earlier</a></h2><p class="meta"><time datetime="2026-10-29">October 29, 2026</time> &middot; 5 min read</p><p class="excerpt">Windows warns you at 20% and 10% battery, then can shut down at 5%. Here is what the defaults actually mean, how to change them, and how to get an alert you cannot miss.</p><a class="read-more" href="../posts/windows-battery-warning-10-percent/">Read article &rarr;</a></article><article class="post-card"><h2><a href="../posts/adhd-laptop-shutdown-lost-work/">ADHD and Lost Work: Why Your Laptop Dying Is an Executive Function Problem</a></h2><p class="meta"><time datetime="2026-10-28">October 28, 2026</time> &middot; 6 min read</p><p class="excerpt">A surprise shutdown costs everyone a file. For people with ADHD it costs something else too: the momentum. Here is why the standard advice fails, and what to change instead.</p><a class="read-more" href="../posts/adhd-laptop-shutdown-lost-work/">Read article &rarr;</a></article><article class="post-card"><h2><a href="../posts/best-battery-monitoring-software-windows-11/">Best Battery Monitoring Software for Windows 11 (2026)</a></h2><p class="meta"><time datetime="2026-10-27">October 27, 2026</time> &middot; 6 min read</p><p class="excerpt">Windows power tools fall into two different categories — health telemetry and alert-and-action tools. Here is an honest look at what each one is actually good for.</p><a class="read-more" href="../posts/best-battery-monitoring-software-windows-11/">Read article &rarr;</a></article><article class="post-card"><h2><a href="../posts/charging-laptop-to-100-battery-health/">Charging Your Laptop to 100% Is Damaging Your Battery. Do This Instead</a></h2><p class="meta"><time datetime="2026-10-26">October 26, 2026</time> &middot; 6 min read</p><p class="excerpt">Modern lithium-ion cells are not ruined by a full charge. The real culprits are heat and time spent sitting at 100%. Here is what actually shortens battery life.</p><a class="read-more" href="../posts/charging-laptop-to-100-battery-health/">Read article &rarr;</a></article>
+<article class="post-card"><h2><a href="../posts/run-bat-script-when-battery-percentage/">How to Run a Batch Script When Your Battery Hits a Certain Percentage</a></h2><p class="meta"><time datetime="2026-10-30">October 30, 2026</time> &middot; 8 min read</p><p class="excerpt">Running a .bat when the battery drops below a set level is easy in PowerShell and a minefield of silent failures. The working version, plus the gotchas.</p><a class="read-more" href="../posts/run-bat-script-when-battery-percentage/">Read article &rarr;</a></article><article class="post-card"><h2><a href="../posts/windows-battery-warning-10-percent/">Windows Only Warns You at 10% Battery. Here&#x27;s How to Get Warned Earlier</a></h2><p class="meta"><time datetime="2026-10-29">October 29, 2026</time> &middot; 5 min read</p><p class="excerpt">Windows warns at 20% and 10% battery, then can shut down at 5%. What the defaults mean, how to change them, and how to get an alert you cannot miss.</p><a class="read-more" href="../posts/windows-battery-warning-10-percent/">Read article &rarr;</a></article><article class="post-card"><h2><a href="../posts/adhd-laptop-shutdown-lost-work/">ADHD and Lost Work: Why Your Laptop Dying Is an Executive Function Problem</a></h2><p class="meta"><time datetime="2026-10-28">October 28, 2026</time> &middot; 6 min read</p><p class="excerpt">A surprise shutdown costs everyone a file. With ADHD it costs the momentum too. Why the standard advice fails, and what to change instead.</p><a class="read-more" href="../posts/adhd-laptop-shutdown-lost-work/">Read article &rarr;</a></article><article class="post-card"><h2><a href="../posts/best-battery-monitoring-software-windows-11/">Best Battery Monitoring Software for Windows 11 (2026)</a></h2><p class="meta"><time datetime="2026-10-27">October 27, 2026</time> &middot; 6 min read</p><p class="excerpt">Windows power tools split into two categories: health telemetry, and alert-and-action tools. An honest look at what each is actually good for.</p><a class="read-more" href="../posts/best-battery-monitoring-software-windows-11/">Read article &rarr;</a></article><article class="post-card"><h2><a href="../posts/charging-laptop-to-100-battery-health/">Charging Your Laptop to 100% Is Damaging Your Battery. Do This Instead</a></h2><p class="meta"><time datetime="2026-10-26">October 26, 2026</time> &middot; 6 min read</p><p class="excerpt">Modern lithium-ion cells are not ruined by a full charge. The real culprits are heat and time at 100%. What actually shortens battery life.</p><a class="read-more" href="../posts/charging-laptop-to-100-battery-health/">Read article &rarr;</a></article>
 </div>
 
 <div class="cta">

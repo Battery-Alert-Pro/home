@@ -35,6 +35,7 @@ deploy time.
 │   ├── adhd-laptop-shutdown-lost-work.md
 │   ├── best-battery-monitoring-software-windows-11.md
 │   └── charging-laptop-to-100-battery-health.md
+├── fonts/                         # Self-hosted Roboto (woff2, latin + latin-ext)
 ├── blog/                          # Generated — post and tag listings
 ├── posts/                         # Generated — one page per post
 ├── feed.xml                       # Generated — RSS feed
@@ -113,6 +114,7 @@ unless you set `slug` in the front matter.
 ```markdown
 ---
 title: "Your Post Title"
+seo_title: Your Post Title | Battery Alert Pro
 slug: your-post-title
 date: 2026-11-04
 description: "One or two sentences. This becomes the meta description, the
@@ -127,11 +129,18 @@ Your article goes here. Standard Markdown: **bold**, *italic*, `code`,
 
 Things worth knowing:
 
+- **`seo_title` is optional.** It sets the `<title>` tag and the `og:title`,
+  while `title` stays as the `<h1>`. Use it when the headline reads better in
+  full than in a search result. Keep the combined title around 60 characters
+  or Google truncates it.
+- **`description` should be 120–160 characters.** It becomes the meta
+  description, the social preview text and the RSS summary.
 - **Internal links are written site-root-relative** — `/posts/another-post/` or
   `/#download`. The builder rewrites them to page-relative paths, so the site
   keeps working from a repository root, a `docs/` folder, or a custom domain.
 - **Tags** are comma-separated in the front matter (or a YAML list). Each tag
-  gets its own page at `/blog/tag/<tag>/`.
+  gets its own page at `/blog/tag/<tag>/`. Tag archives with fewer than two
+  posts are marked `noindex` so they do not compete with the posts themselves.
 - The landing page's "From the blog" list is **hand-written** in `index.html`.
   Add a link there when you publish something worth featuring; the blog index
   at `/blog/` lists everything regardless.
@@ -169,6 +178,12 @@ pushing.
 - The page loads Google Fonts and a `livetrafficfeed.com` visitor-counter widget from
   third-party CDNs. Remove the `<script>` in `index.html` if you would rather not
   include the counter.
+- **Roboto is self-hosted** in `fonts/`. The landing page and the blog both declare
+  it with `@font-face`. A third-party font stylesheet is render-blocking and adds a
+  DNS and TLS round trip before anything can paint.
+- **The visitor counter loads after the `load` event**, so it never blocks first
+  paint or the first input delay. It still pulls in jQuery and several images, so it
+  remains the heaviest thing on the page by bytes.
 - Social preview images must be **absolute** URLs, otherwise Facebook/Twitter/X will
   not render the preview card. They point at
   `https://battery-alert-pro.github.io/home/social_card.png`.
@@ -181,6 +196,10 @@ pushing.
 
 ## After publishing
 
-The site publishes `sitemap.xml`, `robots.txt` and `feed.xml` automatically. Once
-the blog is live, register the sitemap in **Google Search Console** and submit
+The site publishes `sitemap.xml`, `robots.txt` and `feed.xml` automatically. `robots.txt`
+also disallows the build inputs that live in the published tree (`/tools/`,
+`/templates/`, `/content/`, `/requirements.txt`, `/_config.yml`) so search engines
+do not waste crawl budget on them.
+
+Once the blog is live, register the sitemap in **Google Search Console** and submit
 `https://battery-alert-pro.github.io/home/sitemap.xml`.

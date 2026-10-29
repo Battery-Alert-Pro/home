@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
+Disallow: /tools/
+Disallow: /templates/
+Disallow: /content/
+Disallow: /requirements.txt
+Disallow: /_config.yml
 
 Sitemap: https://battery-alert-pro.github.io/home/sitemap.xml
